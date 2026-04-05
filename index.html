@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Foodie - Buddy</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --primary:#e1a24a;
+  --dark:#111;
+  --light:#c6cfe2;
+  --muted:#666;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{background:var(--light);color:#333;transition:0.3s}
+.dark{background:#111;color:#eee}
+
+header{
+  position:sticky;top:0;z-index:1000;
+  background:var(--primary);color:#fff;
+  padding:15px 30px;display:flex;justify-content:space-between;align-items:center
+}
+nav a{margin:0 10px;color:#fff;text-decoration:none}
+
+.toggle{cursor:pointer;background:#fff;color:#000;padding:5px 10px;border-radius:5px}
+
+.hero{
+  height:90vh;
+  background:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836') center/cover;
+  display:flex;align-items:center;justify-content:center;text-align:center;color:#fff
+}
+.hero h2{font-size:50px;background:rgba(0,0,0,0.5);padding:15px;border-radius:10px}
+
+.section{padding:60px 20px;text-align:center}
+
+.menu-items{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px
+}
+
+.card{
+  border-radius:12px;overflow:hidden;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  transition:0.3s
+}
+.card:hover{transform:scale(1.07)}
+.card img{width:100%;height:200px;object-fit:cover}
+
+button{
+  padding:10px 15px;border:none;background:var(--primary);
+  color:#fff;border-radius:5px;cursor:pointer;margin:10px
+}
+
+.categories button{margin:5px}
+
+.about{max-width:700px;margin:auto;color:var(--muted)}
+
+.testimonials{
+  display:flex;flex-wrap:wrap;gap:20px;justify-content:center
+}
+.testimonial{
+  max-width:300px;padding:20px;border-radius:10px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.1)
+}
+
+.newsletter input{
+  padding:10px;width:250px;border-radius:5px;border:1px solid #ccc
+}
+
+.cart{
+  position:fixed;right:20px;bottom:20px;
+  background:#000;color:#fff;padding:15px;border-radius:10px
+}
+
+footer{background:#222;color:#fff;padding:20px;text-align:center}
+
+.fade{opacity:0;transform:translateY(20px);transition:0.6s}
+.show{opacity:1;transform:translateY(0)}
+</style>
+</head>
+
+<body>
+<header>
+  <h1>Sri's Food House</h1>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#menu">Menu</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="toggle" onclick="toggleMode()">🌙</div>
+</header>
+
+<section class="hero">
+  <h2>Delicious Food Delivered To You</h2>
+</section>
+
+<section class="section categories fade">
+  <h2>Categories</h2>
+  <button onclick="filter('all')">All</button>
+  <button onclick="filter('fast')">Fast Food</button>
+  <button onclick="filter('dessert')">Desserts</button>
+</section>
+
+<section class="section fade" id="menu">
+  <h2>Our Menu</h2>
+  <div class="menu-items" id="menuItems"></div>
+</section>
+
+<section class="section about fade" id="about">
+  <h2>About Us</h2>
+  <p>We serve fresh, delicious food with love. Our mission is to bring restaurant-quality meals straight to your doorstep.</p>
+</section>
+
+<section class="section testimonials fade">
+  <h2>What Customers Say</h2>
+  <div class="testimonial">"Amazing food!" ⭐⭐⭐⭐⭐</div>
+  <div class="testimonial">"Fast delivery!" ⭐⭐⭐⭐</div>
+</section>
+
+<section class="section newsletter fade">
+  <h2>Subscribe</h2>
+  <input type="email" placeholder="Enter your email">
+  <button>Subscribe</button>
+</section>
+
+<div class="cart">Cart: <span id="cartCount">0</span></div>
+
+<footer id="contact">
+  <p>© 2026 Sri's Food House</p>
+</footer>
+
+<script>
+const foods=[
+{name:"Pizza",price:300,cat:"fast",img:"https://images.unsplash.com/photo-1600891964599-f61ba0e24092"},
+{name:"Burger",price:150,cat:"fast",img:"https://images.unsplash.com/photo-1550547660-d9450f859349"},
+{name:"Ice Cream",price:50,cat:"dessert",img:"https://images.unsplash.com/photo-1497034825429-c343d7c6a68f"}
+];
+
+let cart=0;
+const menu=document.getElementById("menuItems");
+
+function load(items){
+  menu.innerHTML="";
+  items.forEach(f=>{
+    menu.innerHTML+=`<div class="card">
+      <img src="${f.img}">
+      <h3>${f.name}</h3>
+      <p>₹${f.price}</p>
+      <button onclick="add()">Add</button>
+    </div>`;
+  });
+}
+
+function filter(cat){
+  if(cat==='all') load(foods);
+  else load(foods.filter(f=>f.cat===cat));
+}
+
+function add(){
+  cart++;
+  document.getElementById("cartCount").textContent=cart;
+}
+
+function toggleMode(){
+  document.body.classList.toggle("dark");
+}
+
+// scroll animation
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting) e.target.classList.add('show');
+  });
+});
+document.querySelectorAll('.fade').forEach(el=>observer.observe(el));
+
+load(foods);
+</script>
+</body>
+</html>
